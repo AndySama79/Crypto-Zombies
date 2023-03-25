@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: 3.0
+// SPDX-License-Identifier: GPL 3.0
 pragma solidity >=0.5.0 <0.9.0;
 
 contract ZombieFactory {
@@ -18,11 +18,11 @@ contract ZombieFactory {
 
     Zombie[] public zombies;
 
-    mapping(uint => address) public zombieToOwner;
-    mapping(address => uint) ownerZombieCount;
+    mapping(uint => address) public zombieToOwner; // maps a zombieId to owner address
+    mapping(address => uint) ownerZombieCount;  // keeps count of number of zombies belonging to the same owner
 
-    function _createZombie(string memory _name, uint _dna) private {
-        uint id = zombies.push(Zombie(_name, _dna)) - 1;
+    function _createZombie(string memory _name, uint _dna) internal {
+        uint id = zombies.push(Zombie(_name, _dna)) - 1;    // this is correct
         zombieToOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
         emit NewZombie(id, _name, _dna);
@@ -39,8 +39,4 @@ contract ZombieFactory {
         _createZombie(_name, randDna);
     }
         
-}
-
-contract ZombieFeeding is ZombieFactory {
-    
 }
