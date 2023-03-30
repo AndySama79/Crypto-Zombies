@@ -11,11 +11,14 @@ contract ZombieFactory is Ownable{
     //TODO: Declare state varaibles
     uint dnaDigits = 16;
     uint dnaModulus = 10 ** dnaDigits;
+    uint cooldownTime = 1 days;
 
     //TODO: Define a zombie
     struct Zombie {
         string name;
         uint dna;
+        uint32 level;
+        uint32 readyTime;
     }
 
     Zombie[] public zombies;
@@ -24,7 +27,7 @@ contract ZombieFactory is Ownable{
     mapping(address => uint) ownerZombieCount;  // keeps count of number of zombies belonging to the same owner
 
     function _createZombie(string memory _name, uint _dna) internal {
-        uint id = zombies.push(Zombie(_name, _dna)) - 1;    // this is correct
+        uint id = zombies.push(Zombie(_name, _dna, 1, uint32(now + cooldownTime))) - 1;    // this is correct
         zombieToOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
         emit NewZombie(id, _name, _dna);
